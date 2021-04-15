@@ -10,6 +10,7 @@ Unfolding the protein
 ---------------------
 
 Consider the C-terminal domain (?) of the human prion protein 1QLX (<https://www.rcsb.org/structure/1QLX>)
+with 104 residues
 
 <img src="1QLX.png" width="450"/>
 
@@ -131,15 +132,39 @@ $ gmx trjconv -f md.xtc -s md.tpr -pbc mol -o unfolded.pdb
 Use the dodecahedral box with 1 nm distance to the boundary:
 
 ```console
-$ gmx editconf -f unfolded.pdb -o box.gro -c -d 1.0 -bt dodecahedron
+$ gmx editconf -f unfolded_1.pdb -o newbox.gro -c -d 1.4 -bt dodecahedron
 ```
+
+### Solvate the new system:
+
+```console
+$ cp '#topol.top.1#' newtopol.top
+$ gmx solvate -cp newbox.gro -cs spc216.gro -o newsolvated.gro -p newtopol.top
+```
+
+### Add ions:
+
+```console
+$ gmx grompp -f em.mdp -c newsolvated.gro -p newtopol.top -o newions.tpr -maxwarn 1
+$ gmx genion -s newions.tpr -o newsolv_ions.gro -p newtopol.top -pname NA -nname CL -neutral -conc 0.15
+```
+* Use energy minimisation parameters file `em.mdp`
+* Ignore `Gromacs` warnings; select the solvent group `SOL`
 
 ### Energy minimization in the new box:
 
 ```console
-$ gmx grompp -f em.mdp -c solv_ions.gro -p topol.top -o em.tpr
-$ gmx mdrun -v -deffnm em
+$ gmx grompp -f em.mdp -c newsolv_ions.gro -p newtopol.top -o newem.tpr
+$ gmx mdrun -v -deffnm newem
 ```
+
+Check the result of energy minimization:
+
+```console
+$ gmx energy -f newem.edr -o newpotential.xvg -xvg none
+```
+
+<img src="newem.svg" width="450"/>
 
 ### NVT Equilibration:
 
