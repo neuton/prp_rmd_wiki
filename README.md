@@ -169,10 +169,10 @@ $ gmx energy -f newem.edr -o newpotential.xvg -xvg none
 ### NVT Equilibration:
 
 ```console
-$ gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
-$ gmx mdrun -v -deffnm nvt -update gpu -bonded gpu
+$ gmx grompp -f nvt2.mdp -c newem.gro -r newem.gro -p newtopol.top -o newnvt.tpr
+$ gmx mdrun -v -deffnm newnvt -update gpu -bonded gpu
 ```
-* use `nvt.mdp` input parameters file:
+* use `nvt2.mdp` input parameters file:
 	- 500 ps simulation with 2 fs step
 	- ref_t = 350
 	- gen_temp 350
@@ -182,23 +182,42 @@ $ gmx mdrun -v -deffnm nvt -update gpu -bonded gpu
 Check the result of the NVT equilibration:
 
 ```console
-$ gmx energy -f nvt.edr -o temperature.xvg -xvg none
+$ gmx energy -f newnvt.edr -o newtemp.xvg -xvg none
 ```
+
+<img src="nvt2.svg" width="450"/>
 
 ### NPT Equilibration
 
 Add barostat for folding:
 
 ```console
-$ gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
-$ gmx mdrun -v -deffnm npt
+$ gmx grompp -f npt.mdp -c newnvt.gro -r newnvt.gro -t newnvt.cpt -p newtopol.top -o newnpt.tpr
+$ gmx mdrun -v -deffnm newnpt -update gpu -bonded gpu
 ```
+
+* use `npt.mdp` input parameters file:
+	- 500 ps simulation with 2 fs step
+	- ref_t = 350
+	- gen_temp 350
+	- tcoupl = V-rescale
+* will take around 10 min to complete on the GPU
 
 Check NPT:
 
 ```console
-$ gmx energy -f npt.edr -o pressure.xvg -xvg none
+$ gmx energy -f newnpt.edr -o pressure.xvg -xvg none
 ```
+
+<img src="npt.svg" width="450"/>
+
+Check density:
+
+```console
+$ gmx energy -f newnpt.edr -o density.xvg -xvg none
+```
+
+<img src="npt_density.svg" width="450"/>
 
 rMD run
 -------
