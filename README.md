@@ -13,7 +13,7 @@ Unfolding the protein
 Consider the C-terminal domain (?) of the human prion protein 1QLX (<https://www.rcsb.org/structure/1QLX>)
 with 104 residues
 
-<img src="1QLX.png" width="450"/>
+<img src="native.png" width="450"/>
 
 Start with the experimentally identified native states of the following four mutants:
 `M129N178.pdb`, `M129WT.pdb`, `V129N178.pdb` and `V129WT.pdb`.
