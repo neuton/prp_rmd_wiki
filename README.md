@@ -236,9 +236,28 @@ $ gmx energy -f newnpt.edr -o density.xvg -xvg none
 rMD run
 -------
 
-Remove SOL and NA and CL from .gro file of energy-minimized native state.
+### Prepare the input files
+
+Remove all the solvent/ions atoms (SOL, NA and CL) from the `em.gro` file of the energy-minimized native state
+and save it as `em_protein.gro`. Then run
+
+```console
+$ gmx editconf -f em_protein.gro -o em_protein.pdb
+```
+
+Assuming `Run` directory is inside the current working directory:
+
+```console
+$ cd Run
+$ cp ../em_protein.pdb native.pdb
+$ cp native.cmp ratchet/
+$ cp ../newnpt.gro ratchet/conditions/c1/npt.gro
+$ cp ../newtopol.top ratchet/conditions/c1/topol.top
+```
 
 ### Run the Python script
+
+Slurm is used intrinsically by the script, so explicit invocation is not needed.
 
 ```console
 $ python start_ratchet.py
