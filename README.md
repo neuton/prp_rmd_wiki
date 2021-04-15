@@ -111,6 +111,13 @@ $ gmx mdrun -v -deffnm md -update gpu -bonded gpu
 	- tcoupl = V-rescale
 * will take about an hour to complete on the GPU
 
+Plot the RMSD (in [nm]):
+```console
+$ gmx rms -s md.tpr -f md.xtc -o rmsd.xvg
+```
+
+<img src="rmsd.svg" width="450"/>
+
 Prepare trajectory for visualization:
 
 ```console
