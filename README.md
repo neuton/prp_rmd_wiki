@@ -262,3 +262,6 @@ Slurm is used intrinsically by the script, so explicit invocation is not needed.
 ```console
 $ python start_ratchet.py
 ```
+
+<img src="t1_rmsd.svg" width="450"/>
+<img src="t2_rmsd.svg" width="450"/>
