@@ -6,6 +6,7 @@ Perform a folding pathways simulation of human prion protein (PrP) mutants using
 - production of multiple folding trajectories using ratchet and pawl (rMD) MD, starting from the generated unfolded states
 - scoring the obtained trajectories
 
+
 Unfolding the protein
 ---------------------
 
@@ -101,6 +102,7 @@ $ gmx energy -f nvt.edr -o temperature.xvg -xvg none
 <img src="nvt.svg" width="450"/>
 
 ### Unfolding MD run:
+For PrP run the simulation from 3 to 5 ns for denaturation.
 
 ```console
 $ gmx grompp -f md.mdp -c nvt.gro -p topol.top -t nvt.cpt -o md.tpr
@@ -112,6 +114,7 @@ $ gmx mdrun -v -deffnm md -update gpu -bonded gpu
 	- tcoupl = V-rescale
 * will take about an hour to complete on the GPU
 
+Compute RMSD and choose the farthest configurations for the rMD run.
 Plot the RMSD (in [nm]):
 ```console
 $ gmx rms -s md.tpr -f md.xtc -o rmsd.xvg
@@ -126,6 +129,16 @@ $ gmx trjconv -f md.xtc -s md.tpr -pbc mol -o unfolded.pdb
 ```
 
 <img src="0-1.png" width="600"/>
+
+
+Equilibration
+-------------
+
+Eventually generate about 10 different unfolding states for the rMD run.
+Equilibration is better to run at aprroximately average melting temperature of the protein (350K ?),
+because it has higher chance to reach folded state.
+
+Technical note: reuse old topology files.
 
 ### Redefine the box:
 
@@ -219,15 +232,13 @@ $ gmx energy -f newnpt.edr -o density.xvg -xvg none
 
 <img src="npt_density.svg" width="450"/>
 
+
 rMD run
 -------
-<!-- 
-### Prepare the unfolded state
 
-1. 
+Remove SOL and NA and CL from .gro file of energy-minimized native state.
 
-
-### Run the Python script -->
+### Run the Python script
 
 ```console
 $ python start_ratchet.py
