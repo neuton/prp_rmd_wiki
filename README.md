@@ -6,7 +6,7 @@ Perform a folding pathways simulation of human prion protein (PrP) mutants using
 - production of multiple folding trajectories using ratchet and pawl (rMD) MD, starting from the generated unfolded states
 - scoring the obtained trajectories
 
-The step of thermal unfolding can be automatically performed by executing the [`unfold.sh`](unfold.sh) script
+The step of thermal unfolding can be automatically performed by executing the [`submit.sh`](submit.sh) script
 (currently needs tweaking!).
 
 
