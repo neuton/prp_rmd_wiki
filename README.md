@@ -199,12 +199,12 @@ $ gmx energy -f newem.edr -o newpotential.xvg -xvg none
 
 ### NVT Equilibration:
 
-<img src="nvt2.svg" width="400" align="right"/>
-
 ```console
 $ gmx grompp -f nvt2.mdp -c newem.gro -r newem.gro -p newtopol.top -o newnvt.tpr
 $ gmx mdrun -v -deffnm newnvt -update gpu -bonded gpu
 ```
+
+<img src="nvt2.svg" width="400" align="right"/>
 
 * use `nvt2.mdp` input parameters file:
 	- 500 ps simulation with 2 fs step
@@ -238,13 +238,13 @@ $ gmx mdrun -v -deffnm newnpt -update gpu -bonded gpu
 	- tcoupl = V-rescale
 * will take around 10 min to complete on the GPU
 
+<img src="npt_density.svg" width="400" align="right"/>
+
 Check NPT:
 
 ```console
 $ gmx energy -f newnpt.edr -o pressure.xvg -xvg none
 ```
-
-<img src="npt_density.svg" width="400" align="right"/>
 
 Check density:
 
