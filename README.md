@@ -88,10 +88,10 @@ $ gmx energy -f em.edr -o potential.xvg -xvg none
 
 ### NVT Equilibration:
 
-<img src="nvt.svg" width="400" align="right"/>
-
 Start by equilibrating without a barostat, otherwise computation will blow up.
 Use only NVT V-rescale thermostat for unfolding at *high* temperature (900 K).
+
+<img src="nvt.svg" width="400" align="right"/>
 
 ```console
 $ gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
@@ -223,7 +223,6 @@ $ gmx energy -f newnvt.edr -o newtemp.xvg -xvg none
 ### NPT Equilibration
 
 <img src="npt.svg" width="400" align="right"/>
-<img src="npt_density.svg" width="400" align="right"/>
 
 Add barostat for folding:
 
@@ -244,6 +243,8 @@ Check NPT:
 ```console
 $ gmx energy -f newnpt.edr -o pressure.xvg -xvg none
 ```
+
+<img src="npt_density.svg" width="400" align="right"/>
 
 Check density:
 
