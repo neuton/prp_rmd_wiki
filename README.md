@@ -3,10 +3,10 @@ PrP mutants folding pathways simulation
 
 Perform a folding pathways simulation of human prion protein (PrP) mutants using `Gromacs` (version 2020.4) in the following steps:
 - thermal unfolding of the native state to prepare multiple unfolded states
-- production of multiple folding trajectories using ratchet and pawl (rMD) MD, starting from the generated unfolded states
+- production of multiple folding trajectories using ratchet and pawl MD (rMD), starting from the generated unfolded states
 - scoring the obtained trajectories
 
-The step of thermal unfolding can be automatically performed by executing the [`submit.sh`](submit.sh) script
+The step(s) of thermal unfolding can be automatically performed by executing the [`submit.sh`](submit.sh) script
 (currently needs tweaking!).
 
 
