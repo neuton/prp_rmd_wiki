@@ -253,9 +253,9 @@ rMD run
 ### Prepare the input files
 
 Remove all the solvent/ions atoms (SOL, NA and CL) from the `em.gro` file of the energy-minimized native state
-and save it as `em_protein.gro`. Then run
+and save it as `em_protein.pdb`:
 ```console
-$ gmx editconf -f em_protein.gro -o em_protein.pdb
+$ echo 1 | gmx trjconv -f em.gro -s em.tpr -o em_protein.pdb
 ```
 
 Assuming `Run` directory is inside the current working directory:
