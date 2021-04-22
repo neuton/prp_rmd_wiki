@@ -6,6 +6,9 @@ Perform a folding pathways simulation of human prion protein (PrP) mutants using
 - production of multiple folding trajectories using ratchet and pawl (rMD) MD, starting from the generated unfolded states
 - scoring the obtained trajectories
 
+The step of thermal unfolding can be automatically performed by executing the [`unfold.sh`](unfold.sh) script
+(currently needs tweaking!).
+
 
 Unfolding the protein
 ---------------------
@@ -19,7 +22,7 @@ Start with the experimentally identified native states of the following four mut
 `M129N178.pdb`, `M129WT.pdb`, `V129N178.pdb` and `V129WT.pdb`.
 
 The following steps are applied to each of the mutatants.
-Refer to [unfold.sh](unfold.sh) for the complete script with the commands summarized (see "README" notes inside).
+Refer to [`unfold.sh`](unfold.sh) for the complete script with the commands summarized (see "README" notes inside).
 
 
 ### Prepare the environment (technical notes for working at the cluster):
@@ -148,10 +151,12 @@ Equilibration
 -------------
 
 Eventually generate about 10 different unfolded states for the rMD run.
-Equilibration is better to run at aprroximately average melting temperature of the protein (350K ?),
+Equilibration is better to run at approximately average melting temperature of the protein,
 because it has higher chance to reach folded state.
 
 Technical note: reuse old topology files.
+
+Refer to [`equilibrate.sh`](equilibrate.sh) for the complete script with the commands summarized (see "README" notes inside).
 
 
 ### Redefine the box:
