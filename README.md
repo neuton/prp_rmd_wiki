@@ -43,7 +43,6 @@ $ gmx pdb2gmx -f M129N178.pdb -o start.gro -ignh
 ### Define the simulation box geometry:
 
 Use the dodecahedral box with 4 nm distance to the boundary:
-
 ```console
 $ gmx editconf -f start.gro -o box.gro -c -d 4.0 -bt dodecahedron
 ```
@@ -80,7 +79,6 @@ $ gmx mdrun -v -deffnm em
 * Do not use `mdrun ... -update gpu -bonded gpu` in this case
 
 Check the result of energy minimization:
-
 ```console
 $ gmx energy -f em.edr -o potential.xvg -xvg none
 ```
@@ -106,7 +104,6 @@ $ gmx mdrun -v -deffnm nvt -update gpu -bonded gpu
 * will take around 10 min to complete on the GPU
 
 Check the result of the NVT equilibration:
-
 ```console
 $ gmx energy -f nvt.edr -o temperature.xvg -xvg none
 ```
@@ -117,7 +114,6 @@ $ gmx energy -f nvt.edr -o temperature.xvg -xvg none
 <img src="rmsd.svg" width="400" align="right"/>
 
 For PrP run the simulation from 3 to 5 ns for denaturation.
-
 ```console
 $ gmx grompp -f md.mdp -c nvt.gro -p topol.top -t nvt.cpt -o md.tpr
 $ gmx mdrun -v -deffnm md -update gpu -bonded gpu
@@ -135,8 +131,12 @@ Plot the RMSD (in [nm]):
 $ gmx rms -s md.tpr -f md.xtc -o rmsd.xvg
 ```
 
-Prepare trajectory for visualization:
+Select frames with high RMSD to produce the set of unfolded states (choose the `-dropunder` value accordingly):
+```console
+$ echo 1 1 | gmx trjconv -f md.xtc -s md.tpr -pbc mol -center -sep -o unfolded_.pdb -skip 3 -drop rmsd.xvg -dropunder 2.2
+```
 
+Prepare the whole trajectory for visualization:
 ```console
 $ gmx trjconv -f md.xtc -s md.tpr -pbc mol -o unfolded.pdb
 ```
@@ -147,7 +147,7 @@ $ gmx trjconv -f md.xtc -s md.tpr -pbc mol -o unfolded.pdb
 Equilibration
 -------------
 
-Eventually generate about 10 different unfolding states for the rMD run.
+Eventually generate about 10 different unfolded states for the rMD run.
 Equilibration is better to run at aprroximately average melting temperature of the protein (350K ?),
 because it has higher chance to reach folded state.
 
@@ -157,7 +157,6 @@ Technical note: reuse old topology files.
 ### Redefine the box:
 
 Use the dodecahedral box with 1 nm distance to the boundary:
-
 ```console
 $ gmx editconf -f unfolded_1.pdb -o newbox.gro -c -d 1.4 -bt dodecahedron
 ```
@@ -191,7 +190,6 @@ $ gmx mdrun -v -deffnm newem
 ```
 
 Check the result of energy minimization:
-
 ```console
 $ gmx energy -f newem.edr -o newpotential.xvg -xvg none
 ```
@@ -214,7 +212,6 @@ $ gmx mdrun -v -deffnm newnvt -update gpu -bonded gpu
 * will take around 10 min to complete on the GPU
 
 Check the result of the NVT equilibration:
-
 ```console
 $ gmx energy -f newnvt.edr -o newtemp.xvg -xvg none
 ```
@@ -225,7 +222,6 @@ $ gmx energy -f newnvt.edr -o newtemp.xvg -xvg none
 <img src="npt.svg" width="400" align="right"/>
 
 Add barostat for folding:
-
 ```console
 $ gmx grompp -f npt.mdp -c newnvt.gro -r newnvt.gro -t newnvt.cpt -p newtopol.top -o newnpt.tpr
 $ gmx mdrun -v -deffnm newnpt -update gpu -bonded gpu
@@ -241,13 +237,11 @@ $ gmx mdrun -v -deffnm newnpt -update gpu -bonded gpu
 <img src="npt_density.svg" width="400" align="right"/>
 
 Check NPT:
-
 ```console
 $ gmx energy -f newnpt.edr -o pressure.xvg -xvg none
 ```
 
 Check density:
-
 ```console
 $ gmx energy -f newnpt.edr -o density.xvg -xvg none
 ```
@@ -260,13 +254,11 @@ rMD run
 
 Remove all the solvent/ions atoms (SOL, NA and CL) from the `em.gro` file of the energy-minimized native state
 and save it as `em_protein.gro`. Then run
-
 ```console
 $ gmx editconf -f em_protein.gro -o em_protein.pdb
 ```
 
 Assuming `Run` directory is inside the current working directory:
-
 ```console
 $ cd Run
 $ cp ../em_protein.pdb native.pdb
@@ -278,7 +270,6 @@ $ cp ../newtopol.top ratchet/conditions/c1/topol.top
 ### Run the Python script
 
 Slurm is used intrinsically by the script, so explicit invocation is not needed.
-
 ```console
 $ python start_ratchet.py
 ```
