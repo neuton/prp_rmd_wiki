@@ -13,7 +13,7 @@ Unfolding the protein
 Consider the C-terminal domain (?) of the human prion protein 1QLX (<https://www.rcsb.org/structure/1QLX>)
 with 104 residues
 
-<img src="native.png" width="450" align="right"/>
+<img src="native.png" width="400" align="right"/>
 
 Start with the experimentally identified native states of the following four mutants:
 `M129N178.pdb`, `M129WT.pdb`, `V129N178.pdb` and `V129WT.pdb`.
@@ -66,6 +66,9 @@ $ gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neut
 $ gmx grompp -f em.mdp -c solv_ions.gro -p topol.top -o em.tpr
 $ gmx mdrun -v -deffnm em
 ```
+
+<img src="em.svg" width="400" align="right"/>
+
 * Use `em.mdp` with the steepest descend integrator
 * Remember to use `Slurm` for each `mdrun`
 * Do not use `mdrun ... -update gpu -bonded gpu` in this case
@@ -76,8 +79,6 @@ Check the result of energy minimization:
 $ gmx energy -f em.edr -o potential.xvg -xvg none
 ```
 
-<img src="em.svg" width="450"/>
-
 ### NVT Equilibration:
 Start by equilibrating without a barostat, otherwise computation will blow up.
 Use only NVT V-rescale thermostat for unfolding at *high* temperature (900 K).
@@ -86,6 +87,9 @@ Use only NVT V-rescale thermostat for unfolding at *high* temperature (900 K).
 $ gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
 $ gmx mdrun -v -deffnm nvt -update gpu -bonded gpu
 ```
+
+<img src="nvt.svg" width="400" align="right"/>
+
 * use `nvt.mdp` input parameters file:
 	- 500 ps simulation with 2 fs step
 	- ref_t = 900
@@ -99,8 +103,6 @@ Check the result of the NVT equilibration:
 $ gmx energy -f nvt.edr -o temperature.xvg -xvg none
 ```
 
-<img src="nvt.svg" width="450"/>
-
 ### Unfolding MD run:
 For PrP run the simulation from 3 to 5 ns for denaturation.
 
@@ -108,6 +110,9 @@ For PrP run the simulation from 3 to 5 ns for denaturation.
 $ gmx grompp -f md.mdp -c nvt.gro -p topol.top -t nvt.cpt -o md.tpr
 $ gmx mdrun -v -deffnm md -update gpu -bonded gpu
 ```
+
+<img src="rmsd.svg" width="400" align="right"/>
+
 * use `md.mdp` input parameters file:
 	- 3 ns simulation with 2 fs step
 	- ref_t = 900
@@ -119,8 +124,6 @@ Plot the RMSD (in [nm]):
 ```console
 $ gmx rms -s md.tpr -f md.xtc -o rmsd.xvg
 ```
-
-<img src="rmsd.svg" width="450"/>
 
 Prepare trajectory for visualization:
 
@@ -171,13 +174,13 @@ $ gmx grompp -f em.mdp -c newsolv_ions.gro -p newtopol.top -o newem.tpr
 $ gmx mdrun -v -deffnm newem
 ```
 
+<img src="newem.svg" width="400" align="right"/>
+
 Check the result of energy minimization:
 
 ```console
 $ gmx energy -f newem.edr -o newpotential.xvg -xvg none
 ```
-
-<img src="newem.svg" width="450"/>
 
 ### NVT Equilibration:
 
@@ -185,6 +188,9 @@ $ gmx energy -f newem.edr -o newpotential.xvg -xvg none
 $ gmx grompp -f nvt2.mdp -c newem.gro -r newem.gro -p newtopol.top -o newnvt.tpr
 $ gmx mdrun -v -deffnm newnvt -update gpu -bonded gpu
 ```
+
+<img src="nvt2.svg" width="400" align="right"/>
+
 * use `nvt2.mdp` input parameters file:
 	- 500 ps simulation with 2 fs step
 	- ref_t = 350
@@ -198,8 +204,6 @@ Check the result of the NVT equilibration:
 $ gmx energy -f newnvt.edr -o newtemp.xvg -xvg none
 ```
 
-<img src="nvt2.svg" width="450"/>
-
 ### NPT Equilibration
 
 Add barostat for folding:
@@ -208,6 +212,10 @@ Add barostat for folding:
 $ gmx grompp -f npt.mdp -c newnvt.gro -r newnvt.gro -t newnvt.cpt -p newtopol.top -o newnpt.tpr
 $ gmx mdrun -v -deffnm newnpt -update gpu -bonded gpu
 ```
+
+<img src="npt.svg" width="400" align="right"/>
+
+<img src="npt_density.svg" width="400" align="right"/>
 
 * use `npt.mdp` input parameters file:
 	- 500 ps simulation with 2 fs step
@@ -222,15 +230,11 @@ Check NPT:
 $ gmx energy -f newnpt.edr -o pressure.xvg -xvg none
 ```
 
-<img src="npt.svg" width="450"/>
-
 Check density:
 
 ```console
 $ gmx energy -f newnpt.edr -o density.xvg -xvg none
 ```
-
-<img src="npt_density.svg" width="450"/>
 
 
 rMD run
@@ -263,5 +267,5 @@ Slurm is used intrinsically by the script, so explicit invocation is not needed.
 $ python start_ratchet.py
 ```
 
-<img src="t1_rmsd.svg" width="450"/>
-<img src="t2_rmsd.svg" width="450"/>
+<img src="t1_rmsd.svg" width="400"/>
+<img src="t2_rmsd.svg" width="400"/>
