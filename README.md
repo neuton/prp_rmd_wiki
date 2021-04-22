@@ -262,6 +262,7 @@ Assuming `Run` directory is inside the current working directory:
 ```console
 $ cd Run
 $ cp ../em_protein.pdb native.pdb
+$ python em2cmp.py
 $ cp native.cmp ratchet/
 $ cp ../newnpt.gro ratchet/conditions/c1/npt.gro
 $ cp ../newtopol.top ratchet/conditions/c1/topol.top
